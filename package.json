@@ -1,7 +1,7 @@
 {
-  "name": "Gold Right",
+  "name": "Gold-Right",
   "displayName": "Gold Right",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "dohooo",
   "packageManager": "pnpm@7.0.1",
   "description": "Let me save you more time!",
