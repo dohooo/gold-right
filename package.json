@@ -2,21 +2,21 @@
   "name": "name",
   "displayName": "My Extension",
   "version": "0.0.0",
-  "publisher": "antfu",
+  "publisher": "dohooo",
   "packageManager": "pnpm@7.0.1",
-  "description": "",
+  "description": "Let me save you more time!",
   "keywords": [],
-  "homepage": "https://github.com/antfu/[name]#readme",
+  "homepage": "https://github.com/dohooo/Gold-Right",
   "bugs": {
-    "url": "https://github.com/antfu/[name]/issues"
+    "url": "https://github.com/dohooo/Gold-Right/issues"
   },
   "license": "MIT",
-  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "author": "Dohooo <zhaodonghao586@outlook.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/antfu/[name]"
+    "url": "https://github.com/dohooo/Gold-Right"
   },
-  "funding": "https://github.com/sponsors/antfu",
+  "funding": "https://github.com/sponsors/dohooo",
   "main": "./dist/index.js",
   "files": [
     "dist"
@@ -33,7 +33,7 @@
   ],
   "icon": "res/icon.png",
   "scripts": {
-    "build": "tsup src/index.ts --external vscode",
+    "build": "tsup src/index.ts --external vscode --onSuccess 'cp -a template dist'",
     "dev": "nr build --watch",
     "lint": "eslint .",
     "vscode:prepublish": "nr build",
@@ -42,6 +42,47 @@
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "release": "bumpp --commit --push --tag && nr publish"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "gold-right.createComponent",
+        "title": "Create Component"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "gold-right.createComponent",
+          "group": "1_modification"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Gold Right",
+      "properties": {
+        "goldRight.componentExtension": {
+          "type": "string",
+          "default": "tsx",
+          "description": "component's main file extension "
+        },
+        "goldRight.componentFilename": {
+          "type": "string",
+          "default": "index",
+          "description": "component's main filename"
+        },
+        "goldRight.cssExtension": {
+          "type": "string",
+          "default": "css.ts",
+          "description": "component's css file extension "
+        },
+        "goldRight.cssFilename": {
+          "type": "string",
+          "default": "styled",
+          "description": "component's css filename"
+        }
+      }
+    }
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.23.0",

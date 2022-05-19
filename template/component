@@ -1,0 +1,9 @@
+import React from 'react';
+
+export interface [componentName]Props {
+
+}
+
+export const [componentName]: React.FC<[componentName]Props> = props => {
+    return null
+}
