@@ -8,14 +8,16 @@ export function activate(context: ExtensionContext) {
     folderPath: string
     componentName: string
     componentExtension: string
+    componentType: string
     componentFilename: string
     cssExtension: string
     cssFilename: string
   }) {
-    const { folderPath, componentName: _componentName, componentExtension, componentFilename, cssExtension, cssFilename } = dirInfo
+    const { folderPath, componentName: _componentName, componentExtension, componentType: _componentType, componentFilename, cssExtension, cssFilename } = dirInfo
     const componentName = _componentName.charAt(0).toLocaleUpperCase() + _componentName.slice(1)
+    const componentType = _componentType.charAt(0).toLocaleUpperCase() + _componentType.slice(1)
 
-    const componentTemplateSrc = path.resolve(__dirname, 'template/component')
+    const componentTemplateSrc = path.resolve(__dirname, `template/${componentType}Component.${componentExtension}`)
     const styledTemplateSrc = path.resolve(__dirname, 'template/styled')
     const dest = path.join(folderPath, componentName)
     const componentTemplate = fs.readFileSync(componentTemplateSrc, { encoding: 'utf-8' })

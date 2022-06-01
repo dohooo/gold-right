@@ -66,6 +66,11 @@
           "default": "tsx",
           "description": "component's main file extension "
         },
+        "goldRight.componentType": {
+          "type": "string",
+          "default": "function",
+          "description": "component's type"
+        },
         "goldRight.componentFilename": {
           "type": "string",
           "default": "index",
