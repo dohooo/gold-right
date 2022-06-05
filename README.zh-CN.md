@@ -40,12 +40,12 @@ https://user-images.githubusercontent.com/32405058/172041802-f8210bc4-16f3-4440-
   "paths": [
     { 
       "directory": "src/pages",
-      # 对src/pages使用 components/hooks 模板
+      # 对 “src/pages“ 使用 components/hooks 模板
       "templates": ["components", "hooks"]
     },
     {
       "directory": "src/hooks",
-      # 对src/hooks使用 hooks 模板
+      # 对 “src/hooks” 使用 hooks 模板
       "templates": ["hooks"]
     }
   ],
@@ -55,7 +55,7 @@ https://user-images.githubusercontent.com/32405058/172041802-f8210bc4-16f3-4440-
       "templateName": "components",
       "inputsVariables": [
         {
-          # 定义[COMPONENT_NAME]变量，并打开提示框输入变量内容
+          # 定义 “[COMPONENT_NAME]” 变量，并打开提示框输入变量内容
           "key": "[COMPONENT_NAME]",
           # 输入框标题
           "title": "Please input component name.",
@@ -69,7 +69,7 @@ https://user-images.githubusercontent.com/32405058/172041802-f8210bc4-16f3-4440-
       "templateName": "hooks",
       "inputsVariables": [
         {
-          # 定义[HOOKS_NAME]变量，并打开提示框输入变量内容
+          # 定义 ”[HOOKS_NAME]“ 变量，并打开提示框输入变量内容
           "key": "[HOOKS_NAME]",
           # 输入框标题
           "title": "Please input hooks name."
@@ -80,7 +80,7 @@ https://user-images.githubusercontent.com/32405058/172041802-f8210bc4-16f3-4440-
 }
 ```
 
-3. 创建模板内容
+3. 创建模板
 
 目录结构
 ```shell
