@@ -46,14 +46,14 @@
   "contributes": {
     "commands": [
       {
-        "command": "gold-right.createComponent",
-        "title": "Create Component"
+        "command": "gold-right.createFileFromTemplate",
+        "title": "Create File From Template"
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "command": "gold-right.createComponent",
+          "command": "gold-right.createFileFromTemplate",
           "group": "1_modification"
         }
       ]
@@ -61,25 +61,9 @@
     "configuration": {
       "title": "Gold Right",
       "properties": {
-        "goldRight.componentExtension": {
+        "goldRight.templateDirectoryPath": {
           "type": "string",
-          "default": "tsx",
-          "description": "component's main file extension "
-        },
-        "goldRight.componentFilename": {
-          "type": "string",
-          "default": "index",
-          "description": "component's main filename"
-        },
-        "goldRight.cssExtension": {
-          "type": "string",
-          "default": "css.ts",
-          "description": "component's css file extension "
-        },
-        "goldRight.cssFilename": {
-          "type": "string",
-          "default": "styled",
-          "description": "component's css filename"
+          "description": "Template directory path."
         }
       }
     }
@@ -100,5 +84,8 @@
     "vite": "^2.9.8",
     "vitest": "^0.12.4",
     "vsce": "^2.7.0"
+  },
+  "dependencies": {
+    "walk-sync": "^3.0.0"
   }
 }

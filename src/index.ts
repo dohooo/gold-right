@@ -1,92 +1,145 @@
-import fs from 'fs'
-import path from 'path'
+import fs, { readFileSync, statSync } from 'fs'
+import { dirname, isAbsolute, join } from 'path'
+import walkSync from 'walk-sync'
 import type { ExtensionContext } from 'vscode'
 import { commands, window, workspace } from 'vscode'
+import { fillPath, getWorkspacePath } from './utils/path'
+import type { Variables } from './utils/processContent'
+import { injectVariables } from './utils/processContent'
+import { getConfig } from './utils/config'
 
-export function activate(context: ExtensionContext) {
-  function createComponent(dirInfo: {
-    folderPath: string
-    componentName: string
-    componentExtension: string
-    componentFilename: string
-    cssExtension: string
-    cssFilename: string
+const writeFile = (path: string, contents: string, cb: fs.NoParamCallback) => {
+  fs.mkdir(dirname(path), { recursive: true }, (err) => {
+    if (err)
+      return cb(err)
+
+    fs.writeFile(path, contents, cb)
+  })
+}
+
+export async function activate(context: ExtensionContext) {
+  async function create(params: {
+    targetPath: string
+    templateName: string
+    templateDirectoryPath: string
   }) {
-    const { folderPath, componentName: _componentName, componentExtension, componentFilename, cssExtension, cssFilename } = dirInfo
-    const componentName = _componentName.charAt(0).toLocaleUpperCase() + _componentName.slice(1)
+    const { targetPath, templateName, templateDirectoryPath } = params
 
-    const componentTemplateSrc = path.resolve(__dirname, 'template/component')
-    const styledTemplateSrc = path.resolve(__dirname, 'template/styled')
-    const dest = path.join(folderPath, componentName)
-    const componentTemplate = fs.readFileSync(componentTemplateSrc, { encoding: 'utf-8' })
-    const styledTemplate = fs.readFileSync(styledTemplateSrc, { encoding: 'utf-8' })
+    const config = getConfig(templateDirectoryPath)
+    const templateConfig = config?.templatesConfig?.find(template => template.templateName === templateName)
 
-    if (fs.existsSync(dest)) {
-      window.showInformationMessage(`${componentName} already exists, please choose another name.`)
-      return
+    const variables: Variables = []
+
+    for (let i = 0; i < (templateConfig?.inputsVariables?.length || 0); i++) {
+      const inputConfig = templateConfig?.inputsVariables[i]
+
+      if (!inputConfig?.key)
+        continue
+
+      let value: string
+
+      try {
+        value = (await window.showInputBox({ title: inputConfig.title })) || ''
+
+        if (inputConfig.required && !value) {
+          window.showErrorMessage(`The variable ${inputConfig.key} is required.`)
+          return
+        }
+      }
+      catch (error) {
+        continue
+      }
+
+      variables.push({
+        key: inputConfig.key,
+        value,
+      })
     }
 
-    fs.mkdirSync(dest)
-    fs.writeFileSync(path.resolve(`${dest}/${cssFilename}.${cssExtension}`), styledTemplate)
-    fs.writeFileSync(
-      path.resolve(`${dest}/${componentFilename}.${componentExtension}`),
-      componentTemplate
-        .replace(/\[componentName\]/g, componentName)
-        .replace(/\[cssExtension\]/, cssExtension)
-        .replace(/\[cssFileName\]/, cssFilename),
-    )
+    const templatePath = join(templateDirectoryPath, templateName)
+    const templateStat = statSync(templatePath)
+    if (templateStat.isDirectory()) {
+      walkSync(templatePath).forEach((file) => {
+        const filePath = join(templatePath, file)
+        const fileStat = statSync(filePath)
+        if (fileStat.isFile()) {
+          const targetFilePath = injectVariables(join(targetPath, file), variables)
+          if (!fs.existsSync(targetFilePath)) {
+            const content = injectVariables(readFileSync(filePath, 'utf-8'), variables)
+            writeFile(targetFilePath, content, (err) => {
+              if (err)
+                window.showErrorMessage(err.message)
+            })
+          }
+        }
+      })
+    }
+
     window.showInformationMessage(
-      `Succeeded in creating ${componentName} component!`,
+      'Successful create!',
     )
   }
 
-  const cfc = commands.registerCommand(
-    'gold-right.createComponent',
-    (param) => {
-      const folderPath = param.fsPath
-      const defaultComponentName = folderPath.split('/').pop()
-      const options = {
-        prompt: 'Please input the component name: ',
-        placeHolder: `Component Name (default:${defaultComponentName})`,
-      }
+  const workspacePath = getWorkspacePath()
 
-      const componentExtension = workspace
-        .getConfiguration('goldRight')
-        .get('componentExtension') as string
-      const componentFilename = workspace
-        .getConfiguration('goldRight')
-        .get('componentFilename') as string
-      const cssExtension = workspace
-        .getConfiguration('goldRight')
-        .get('cssExtension') as string
-      const cssFilename = workspace
-        .getConfiguration('goldRight')
-        .get('cssFilename') as string
+  if (workspacePath) {
+    const _templateDirectoryPath = workspace
+      .getConfiguration('goldRight')
+      .get('templateDirectoryPath') as string
 
-      if (!componentExtension)
-        window.showInformationMessage('Please set the componentExtension in the settings. ')
+    if (!_templateDirectoryPath) {
+      window.showErrorMessage(
+        'The property of \'goldRight.templateDirectoryPath\' is not set.',
+      )
+      return
+    }
 
-      if (!cssExtension)
-        window.showInformationMessage('Please set the cssExtension in the the settings.')
+    const cfc = commands.registerCommand(
+      'gold-right.createFileFromTemplate',
+      (param) => {
+        const templateDirectoryPath = isAbsolute(_templateDirectoryPath) ? _templateDirectoryPath : join(workspacePath, _templateDirectoryPath)
+        const config = getConfig(templateDirectoryPath)
+        const paths = config?.paths || []
+        const folderPath = param.path
 
-      if (!cssFilename)
-        window.showInformationMessage('Please set the cssFilename in the settings.')
+        const path = paths.find((path) => {
+          if (path)
+            return String(folderPath).startsWith(fillPath(path.directory))
 
-      window.showInputBox(options).then((componentName) => {
-        createComponent({
-          folderPath,
-          // inputName -> current directory name
-          componentName: componentName || defaultComponentName,
-          componentFilename,
-          componentExtension,
-          cssExtension,
-          cssFilename,
+          return false
         })
-      })
-    },
-  )
 
-  context.subscriptions.push(cfc)
+        if (!path) {
+          window.showInformationMessage('Current directory doesn\'t have a template.')
+          return
+        }
+
+        // Check whether the template exists
+        const templates = path.templates.filter((templateName) => {
+          const templatePath = join(templateDirectoryPath, templateName)
+          const isExist = fs.existsSync(templatePath)
+          if (!isExist)
+            window.showErrorMessage(`Template ${templateName} doesn't exist.`)
+          return isExist
+        })
+
+        window.showQuickPick(templates).then((templateName) => {
+          if (templates.includes(templateName!)) {
+            create({
+              targetPath: fillPath(path.directory),
+              templateName: templateName!,
+              templateDirectoryPath,
+            })
+          }
+        })
+      },
+    )
+
+    context.subscriptions.push(cfc)
+  }
+  else {
+    window.showErrorMessage('Please open a workspace first!')
+  }
 }
 
 export function deactivate() { }

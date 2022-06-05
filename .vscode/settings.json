@@ -2,5 +2,16 @@
   "prettier.enable": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "cSpell.words": [
+    "antfu",
+    "bumpp",
+    "dohooo",
+    "esno",
+    "pnpm",
+    "tsup",
+    "typecheck",
+    "vite",
+    "vitest"
+  ]
 }
