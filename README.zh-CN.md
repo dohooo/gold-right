@@ -1,6 +1,5 @@
 <p align="center">
-  <img width="70%" align='center' src='./res/icon-light-large.png#gh-light-mode-only'/>
-  <img width="70%" align='center' src='./res/icon-dark-large.png#gh-dark-mode-only'/>
+  <img width="70%" align='center' src='./res/icon-light-large.png'/>
 </p>  
 <p align="center">
   <a href="./README.md">English</a> | 简体中文  
