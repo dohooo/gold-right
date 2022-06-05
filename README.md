@@ -127,4 +127,4 @@ export const [HOOKS_NAME] = () => {
 
 ## License
 
-MIT
+[MIT]('./LICENSE.md)
