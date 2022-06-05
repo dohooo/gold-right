@@ -4,7 +4,7 @@
   "version": "0.1.1",
   "publisher": "dohooo",
   "packageManager": "pnpm@7.0.1",
-  "description": "Let me save you more time!",
+  "description": "Specify various templates for different directories and create them with one click.",
   "keywords": [],
   "homepage": "https://github.com/dohooo/Gold-Right",
   "bugs": {
