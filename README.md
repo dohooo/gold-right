@@ -1,6 +1,9 @@
 <p align="center">
   <img align='center' src='./res/icon.png'/>
-</p>
+</p>  
+<p align="center">
+  English | <a href="./README.zh-CN.md">简体中文</a>  
+</p>    
 
 # Gold Right
 
