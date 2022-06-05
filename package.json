@@ -33,7 +33,7 @@
   ],
   "icon": "res/icon-dark.png",
   "scripts": {
-    "build": "tsup src/index.ts --external vscode --onSuccess 'cp -a template dist'",
+    "build": "tsup src/index.ts --external vscode",
     "dev": "nr build --watch",
     "lint": "eslint .",
     "vscode:prepublish": "nr build",
