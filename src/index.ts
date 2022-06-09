@@ -1,12 +1,21 @@
 import fs, { readFileSync, statSync } from 'fs'
 import { dirname, isAbsolute, join } from 'path'
-import walkSync from 'walk-sync'
 import type { ExtensionContext } from 'vscode'
 import { commands, window, workspace } from 'vscode'
 import { fillPath, getWorkspacePath } from './utils/path'
 import type { Variables } from './utils/processContent'
 import { injectVariables } from './utils/processContent'
 import { getConfig } from './utils/config'
+
+function walkDir(dir: string, callback: (path: string) => void) {
+  fs.readdirSync(dir).forEach((filePath) => {
+    const dirPath = join(dir, filePath)
+    const isDirectory = fs.statSync(dirPath).isDirectory()
+    isDirectory
+      ? walkDir(dirPath, callback)
+      : callback(dirPath)
+  })
+}
 
 const writeFile = (path: string, contents: string, cb: fs.NoParamCallback) => {
   fs.mkdir(dirname(path), { recursive: true }, (err) => {
@@ -59,11 +68,10 @@ export async function activate(context: ExtensionContext) {
     const templatePath = join(templateDirectoryPath, templateName)
     const templateStat = statSync(templatePath)
     if (templateStat.isDirectory()) {
-      walkSync(templatePath).forEach((file) => {
-        const filePath = join(templatePath, file)
+      walkDir(templatePath, (filePath) => {
         const fileStat = statSync(filePath)
         if (fileStat.isFile()) {
-          const targetFilePath = injectVariables(join(targetPath, file), variables)
+          const targetFilePath = injectVariables(join(targetPath, filePath.replace(templatePath, '')), variables)
           if (!fs.existsSync(targetFilePath)) {
             const content = injectVariables(readFileSync(filePath, 'utf-8'), variables)
             writeFile(targetFilePath, content, (err) => {
