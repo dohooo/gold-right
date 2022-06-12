@@ -12,6 +12,8 @@
 ## Reason
 Usually there is something in the project directory in a particular format, code snippet, configuration, directory structure, etc... Copying or right-clicking a new file frequently doesn't make us any more productive, so maybe we can make right-clicking `easier`.
 
+<img width="1428" alt="IMG_6849" src="https://user-images.githubusercontent.com/32405058/173213811-529b593a-9252-4f12-9244-c9b70dabd3c7.PNG">
+
 ## Demo
 
 https://user-images.githubusercontent.com/32405058/173213637-e1d0ea89-ad7b-434f-8d6b-a7035282838c.mp4
