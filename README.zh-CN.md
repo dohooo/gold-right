@@ -12,6 +12,8 @@
 ## 起因
 通常我们的工程目录中总会存在特定格式的内容，代码段、配置、目录结构等等... 频繁的拷贝又或者是右键新文件，再熟练的动作也不会让我们的效率变得更高，所以或许我们可以让右键变得更`方便`。
 
+<img width="1428" alt="IMG_6849" src="https://user-images.githubusercontent.com/32405058/173213811-529b593a-9252-4f12-9244-c9b70dabd3c7.PNG">
+
 ## 演示
 
 https://user-images.githubusercontent.com/32405058/173213637-e1d0ea89-ad7b-434f-8d6b-a7035282838c.mp4
