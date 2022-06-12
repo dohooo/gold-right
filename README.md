@@ -122,9 +122,7 @@ export const [HOOKS_NAME] = () => {
 ## Sponsors
 
 <p align="center">
-  <a href="./sponsorkit/sponsors.svg">
-    <img src='./sponsorkit/sponsors.png'/>
-  </a>
+  <img src='https://github.com/dohooo/sponsors/blob/master/sponsors.png?raw=true'/>
 </p>
 
 ## License
