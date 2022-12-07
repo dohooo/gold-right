@@ -91,20 +91,19 @@ export async function activate(context: ExtensionContext) {
   const workspacePath = getWorkspacePath()
 
   if (workspacePath) {
-    const _templateDirectoryPath = workspace
-      .getConfiguration('goldRight')
-      .get('templateDirectoryPath') as string
-
-    if (!_templateDirectoryPath) {
-      window.showErrorMessage(
-        'The property of \'goldRight.templateDirectoryPath\' is not set.',
-      )
-      return
-    }
-
     const cfc = commands.registerCommand(
       'gold-right.createFileFromTemplate',
       (param) => {
+        const _templateDirectoryPath = workspace
+          .getConfiguration('goldRight')
+          .get('templateDirectoryPath') as string
+
+        if (!_templateDirectoryPath) {
+          window.showErrorMessage(
+            'The property of \'goldRight.templateDirectoryPath\' is not set.',
+          )
+          return
+        }
         const templateDirectoryPath = isAbsolute(_templateDirectoryPath) ? _templateDirectoryPath : join(workspacePath, _templateDirectoryPath)
         const config = getConfig(templateDirectoryPath)
         const paths = config?.paths || []
