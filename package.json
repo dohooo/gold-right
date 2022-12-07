@@ -1,7 +1,7 @@
 {
   "name": "gold-right",
   "displayName": "Gold Right",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "publisher": "dohooo",
   "packageManager": "pnpm@7.0.1",
   "description": "Specify various templates for different directories and create them with one click.",
